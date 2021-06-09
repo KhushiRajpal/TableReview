@@ -12,7 +12,7 @@ export default class ReviewsController {
 
             const date = new Date ()
 
-            const ReviewRespose = await ReviewsDAO.addReview(
+            const reviewResponse = await ReviewsDAO.addReview(
                 restaurantId,
                 userInfo,
                 review,
