@@ -44,4 +44,32 @@ export default class RestaurantsController{
     }
     res.json(response)
 }
+
+static async apiGetRestaurantsById(req, res, next){
+    try{
+        //parameter is what's there in the url after the slash
+        let id = req.params.id || {}
+        let restaurant = await RestaurantsDAO.getRestaurantsById(id)
+        if(!restaurant) {
+            res.status(404).json({ error: "Not found" })
+            return
+        }
+        res.json(restaurant)
+
+    } catch(e){
+        console.log('api, ${e}')
+        res.status(500).json({ error: e})
+    }
+}
+
+static async apiGetRestaurantCusines(req, res, next){
+    try{
+        let cuisines = await RestaurantsDAO.getCuisines()
+        res.json(cusines)
+
+    } catch(e) {
+        console.log('api, ${e}')
+        res.status(500).json({error: e})
+    }
+}
 }
