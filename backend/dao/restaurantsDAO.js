@@ -1,5 +1,6 @@
 import mongodb from "mongodb"
 const ObjectId = mongodb.ObjectID
+//getting access to object id
 
 let restaurants
 //use to store reference to database
@@ -69,17 +70,19 @@ export default class RestaurantsDAO{
 
     }
 
-    static async getRestaurantById(id) {
+    static async getRestaurantsByID(id) {
         try{
             const pipeline = [
                 {
                     $match:{
+                        //trying to match the id of a certain restaurant
                         _id: new ObjectId(id),
                     },
                 },
 
-                        {
-                            $lookup:{
+                        { //looking up reviews to add to results
+                            //mongodb aggregation pipeline: part of it is lookup
+                            $lookup: {
                                 from: "reviews",
                                 let: {
                                        id: "$_id",
@@ -88,6 +91,7 @@ export default class RestaurantsDAO{
                                     {
                                         $match: {
                                             $expr: {
+                                                //match restaurant id with all reviews that have same id
                                                 $eq: ["$restaurant_id", "$$id"],
                                             },
                                         },
@@ -116,11 +120,11 @@ export default class RestaurantsDAO{
     }
 
 
-    static async getCuisines(){
+    static async getCuisines() {
         let cuisines = []
         try{
-            cuisines = await restaurants.distinct("cuisines")
-            return cusines
+            cuisines = await restaurants.distinct("cuisine")
+            return cuisines
         } catch(e) {
             console.log('Unable to get cuisines, ${e}')
             return cuisines
